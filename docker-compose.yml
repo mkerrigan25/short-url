@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql
+    container_name: docker-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=shorturl
+      - MYSQL_PASSWORD=root
+    volumes:
+      - "./sql/db_setup.sql:/docker-entrypoint-initdb.d/1.sql"
+    ports:
+      - 6033:3306
+    networks:
+      - project_net
+
+  myapp-main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    command: ["./wait-for-it.sh" , "mysql:3306" , "--strict" , "--timeout=300" , "--" , "java","-jar","app.jar"]
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - mysql:mysql
+    networks:
+      - project_net
+
+networks:
+  project_net:
+    driver: bridge

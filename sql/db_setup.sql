@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `long_url` (
+    `id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `longurl` VARCHAR(255) NOT NULL,
+    `clicks` INT NOT NULL,
+    `createtime` DATETIME NOT NULL,
+    `lastVisted` DATETIME DEFAULT NULL
+);
